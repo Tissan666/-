@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест «Мой идеальный  напарник в СПО "Спарте"»</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --spartan-red: #e74c3c;
+            --spartan-orange: #e67e22;
+            --spartan-yellow: #f1c40f;
+            --spartan-blue: #3498db;
+            --spartan-dark: #2c3e50;
+            --spartan-light: #ecf0f1;
+        }
+        
+        body {
+            font-family: 'Rubik', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            color: var(--spartan-dark);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--spartan-red), var(--spartan-orange));
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--spartan-yellow), var(--spartan-blue));
+        }
+        
+        h1 {
+            font-family: 'Archivo Black', sans-serif;
+            margin: 0;
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .question-container {
+            display: none;
+            margin-bottom: 40px;
+        }
+        
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .question {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--spartan-blue);
+            position: relative;
+        }
+        
+        .question-number {
+            background-color: var(--spartan-red);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .question-text {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .options {
+            margin-top: 25px;
+        }
+        
+        .option {
+            margin-bottom: 20px;
+            padding-left: 40px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            line-height: 1.5;
+            display: block;
+        }
+        
+        .option:hover {
+            color: var(--spartan-blue);
+            transform: translateX(5px);
+        }
+        
+        .option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 26px;
+            width: 26px;
+            background-color: var(--spartan-light);
+            border-radius: 50%;
+            border: 2px solid var(--spartan-dark);
+            transition: all 0.3s;
+        }
+        
+        .option:hover .checkmark {
+            border-color: var(--spartan-blue);
+            transform: scale(1.1);
+        }
+        
+        .option input:checked ~ .checkmark {
+            background-color: var(--spartan-orange);
+            border-color: var(--spartan-orange);
+        }
+        
+        .checkmark::after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 8px;
+            top: 4px;
+            width: 6px;
+            height: 12px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+        
+        .option input:checked ~ .checkmark::after {
+            display: block;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--spartan-blue), var(--spartan-red));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            min-width: 180px;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--spartan-dark);
+            border: 2px solid var(--spartan-blue);
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            height: 12px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(to right, var(--spartan-blue), var(--spartan-red));
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        #result {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            display: none;
+            animation: fadeIn 0.5s;
+            border-top: 5px solid var(--spartan-yellow);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .winner {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 32px;
+            color: var(--spartan-red);
+            margin: 25px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, var(--spartan-red), var(--spartan-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .camp-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: var(--spartan-orange);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        /* Анимация конфетти */
+        .confetti {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Тест «Мой идеальный напарник в СПО "Спарте"»</h1>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        
+        <form id="quiz">
+            <!-- Вопрос 1 -->
+            <div class="question-container active" id="q1-container">
+                <div class="question">
+                    <div class="question-number">1</div>
+                    <span class="question-text">Мы с моим напарником стоим на:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q1" value="Кровякова,Мальчикова">
+                            <span class="checkmark"></span>
+                            Младшем отряде
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="Кровякова,Демьяненко,Колесова,Мальчикова,Калашникова,Петров,Мустафин,Щёлокова,Неборак">
+                            <span class="checkmark"></span>
+                            Средне младшем отряде
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="Павлова,Фатеева,Буренкова,Кровякова,Мальчикова,Петров,Мустафин,Садыхов">
+                            <span class="checkmark"></span>
+                            Средне старшем отряде
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="Хамин,Мальчикова,Стародумова">
+                            <span class="checkmark"></span>
+                            Старшем отряде
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q1" value="Алфимов,Петров">
+                            <span class="checkmark"></span>
+                            Мы не стоим, мы лежим!
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary" disabled>Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 2 -->
+            <div class="question-container" id="q2-container">
+                <div class="question">
+                    <div class="question-number">2</div>
+                    <span class="question-text">Мы с напарником полностью дополняем друг друга, поэтому он отвечает за:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q2" value="Кровякова,Павлова,Буренкова,Мальчикова,Колесова,Петров,Щёлокова,Фатеева,Садыхов,Неборак,Стародумова">
+                            <span class="checkmark"></span>
+                            Творческие моменты
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="Хамин,Алфимов,Мальчикова,Демьяненко,Петров,Мустафин,Щёлокова">
+                            <span class="checkmark"></span>
+                            Спортивные мероприятия
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="Кровякова,Хамин,Демьяненко,Алфимов,Мальчикова,Колесова,Калашникова,Щёлокова,Фатеева,Неборак,Стародумова">
+                            <span class="checkmark"></span>
+                            Дисциплину
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q2" value="Павлова,Демьяненко,Буренкова,Мальчикова,Колесова,Калашникова,Щёлокова,Фатеева,Неборак,Стародумова">
+                            <span class="checkmark"></span>
+                            Уборку
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 3 -->
+            <div class="question-container" id="q3-container">
+                <div class="question">
+                    <div class="question-number">3</div>
+                    <span class="question-text">Мы с напарником имеем одинаковые цели, поэтому нам легко понять друг друга, ведь наша цель:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q3" value="Алфимов">
+                            <span class="checkmark"></span>
+                            Взять лучший отряд смены!
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="Хамин,Калашникова,Мустафин,Стародумова">
+                            <span class="checkmark"></span>
+                            Чтобы дети хорошо отдохнули, а займём что-то или нет не так важно.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q3" value="Кровякова,Павлова,Демьяненко,Буренкова,Мальчикова,Фатеева,Петров,Щёлокова,Садыхов,Неборак">
+                            <span class="checkmark"></span>
+                            Зарядить детей и сплотить, так чтобы они запомнили эту смену на всю свою жизнь!
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 4 -->
+            <div class="question-container" id="q4-container">
+                <div class="question">
+                    <div class="question-number">4</div>
+                    <span class="question-text">Вот и пришло время подъёма. Утром мой напарник:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q4" value="Кровякова,Фатеева,Мальчикова,Петров,Щёлокова,Неборак">
+                            <span class="checkmark"></span>
+                            Будет детей, пока я привожу себя в порядок
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="Демьяненко,Буренкова,Алфимов,Колесова,Калашникова,Мустафин,Садыхов,Стародумова">
+                            <span class="checkmark"></span>
+                            Отсыпается, ведь он всю ночь делал декорации. Пусть ещё поспит 10 минут.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q4" value="Хамин,Павлова">
+                            <span class="checkmark"></span>
+                            Идёт на планёрку, потому что я не в ресурсе.
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 5 -->
+            <div class="question-container" id="q5-container">
+                <div class="question">
+                    <div class="question-number">5</div>
+                    <span class="question-text">Скоро придёт фея чистоты. Мы с напарником:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q5" value="Кровякова,Мальчикова,Неборак,Стародумова">
+                            <span class="checkmark"></span>
+                            Включаем музыку погромче и убираемся вместе с детьми
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="Хамин,Павлова,Калашникова,Щёлокова">
+                            <span class="checkmark"></span>
+                            Говорим детям, чтобы они убрались и не тревожили фею творить чудеса, иначе она может разозлиться
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="Демьяненко,Буренкова,Алфимов,Колесова,Петров,Мустафин,Садыхов">
+                            <span class="checkmark"></span>
+                            Говорим детям, чтобы они побыстрее всё убрали, при этом сами ходим и бдим, чтобы был порядок
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q5" value="Фатеева">
+                            <span class="checkmark"></span>
+                            Назначаем ответственных за каждую комнату, которые после уборки подходят к нам, чтобы её сдать и получить свою оценку в экран чистоты
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 6 -->
+            <div class="question-container" id="q6-container">
+                <div class="question">
+                    <div class="question-number">6</div>
+                    <span class="question-text">В свободное время мы с детьми:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q6" value="Фатеева,Неборак">
+                            <span class="checkmark"></span>
+                            Репетируем, репетируем и ещё раз репетируем.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="Кровякова,Хамин,Демьяненко,Буренкова,Мальчикова,Колесова,Калашникова,Петров,Мустафин,Щёлокова">
+                            <span class="checkmark"></span>
+                            Отдыхаем на пикнике, играем в игры на природе. Готовимся к спортивным мероприятиям.
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q6" value="Павлова,Алфимов,Садыхов,Стародумова">
+                            <span class="checkmark"></span>
+                            Убираемся и обсуждаем предстоящие мероприятия
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 7 -->
+            <div class="question-container" id="q7-container">
+                <div class="question">
+                    <div class="question-number">7</div>
+                    <span class="question-text">В тихий час мы с напарником считаем, что дети:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q7" value="Павлова,Демьяненко,Калашникова,Садыхов,Стародумова">
+                            <span class="checkmark"></span>
+                            Должны спать
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="Кровякова,Фатеева,Колесова,Петров,Щёлокова">
+                            <span class="checkmark"></span>
+                            Могут не спать, но лежать на кровати и вести себя тихо: играть в телефон, читать
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="Хамин,Алфимов">
+                            <span class="checkmark"></span>
+                            Могут играть в настолки, но тихо, чтобы не мешать другим
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q7" value="Буренкова,Мальчикова,Мустафин,Неборак">
+                            <span class="checkmark"></span>
+                            Могут не спать, но вести себя тихо и разговаривать шёпотом
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 8 -->
+            <div class="question-container" id="q8-container">
+                <div class="question">
+                    <div class="question-number">8</div>
+                    <span class="question-text">На дискотеке мой напарник:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q8" value="Кровякова,Хамин,Демьяненко,Буренкова,Мальчикова,Садыхов,Неборак">
+                            <span class="checkmark"></span>
+                            Зажигает со мной на сцене под вожатские танцы
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="Калашникова,Петров,Щёлокова,Фатеева">
+                            <span class="checkmark"></span>
+                            Танцует в круге с детьми, пока я дежурю на входе
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q8" value="Павлова,Алфимов,Колесова,Мустафин,Стародумова">
+                            <span class="checkmark"></span>
+                            Дежурит на входе, потому что в прошлый раз стоял(-а) я
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 9 -->
+            <div class="question-container" id="q9-container">
+                <div class="question">
+                    <div class="question-number">9</div>
+                    <span class="question-text">В своём напарнике я больше всего ценю:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q9" value="Демьяненко,Щёлокова">
+                            <span class="checkmark"></span>
+                            Искренность и честность
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="Мустафин,Алфимов">
+                            <span class="checkmark"></span>
+                            ЧТО ОН ВООБЩЕ ЕСТЬ!!!
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="Хамин">
+                            <span class="checkmark"></span>
+                            Командный дух
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="Колесова,Калашникова,Петров,Садыхов">
+                            <span class="checkmark"></span>
+                            Что он всегда рядом и может поддержать
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="Павлова,Буренкова">
+                            <span class="checkmark"></span>
+                            Терпение и лёгкость
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="Фатеева,Кровякова,Неборак">
+                            <span class="checkmark"></span>
+                            Умение находить общий язык с детьми и его творческие способности
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q9" value="Мальчикова,Стародумова">
+                            <span class="checkmark"></span>
+                            Дисциплину и соблюдение таймингов
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn next-btn">Далее</button>
+                </div>
+            </div>
+
+            <!-- Вопрос 10 -->
+            <div class="question-container" id="q10-container">
+                <div class="question">
+                    <div class="question-number">10</div>
+                    <span class="question-text">В столовой твой напарник:</span>
+                    <div class="options">
+                        <label class="option">
+                            <input type="radio" name="q10" value="Фатеева,Кровякова,Павлова,Буренкова,Колесова,Петров,Мустафин,Щёлокова,Садыхов">
+                            <span class="checkmark"></span>
+                            Дежурит вместе с детьми
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="Хамин">
+                            <span class="checkmark"></span>
+                            Кричит вместе с детьми «ВСЕМ-ВСЕМ ПРИЯТНОГО АППЕТИТА»
+                        </label>
+                        <label class="option">
+                            <input type="radio" name="q10" value="Демьяненко,Алфимов,Мальчикова,Калашникова,Неборак,Стародумова">
+                            <span class="checkmark"></span>
+                            Кушает и находит вам нетронутые порции
+                        </label>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <button type="button" class="btn btn-secondary prev-btn">Назад</button>
+                    <button type="button" class="btn" id="show-result">Узнать результат</button>
+                </div>
+            </div>
+        </form>
+
+        <div id="result">
+            <div class="camp-icon">🏕️</div>
+            <h2>Ваш идеальный напарник:</h2>
+            <div class="winner" id="winner"></div>
+            <p>Поздравляю тебя! Этот человек идеально дополнит твои качества в вожатской деятельности!</p>
+        </div>
+        
+        <footer>
+            СПО "Спарта" © 2025 | Тест создан с любовью к всем вам P.S Молочник
+        </footer>
+    </div>
+
+    <script>
+        // Текущий вопрос
+        let currentQuestion = 1;
+        const totalQuestions = 10;
+        
+        // Обновление прогресс-бара
+        function updateProgress() {
+            const progress = ((currentQuestion - 1) / totalQuestions) * 100;
+            document.getElementById("progress").style.width = progress + "%";
+        }
+        
+        // Переход к следующему вопросу
+        function nextQuestion() {
+            // Проверяем, выбран ли ответ
+            const selectedOption = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+            if (!selectedOption) {
+                alert("Пожалуйста, выберите ответ перед продолжением!");
+                return;
+            }
+            
+            // Скрываем текущий вопрос
+            document.getElementById(`q${currentQuestion}-container`).classList.remove('active');
+            
+            // Показываем следующий вопрос
+            currentQuestion++;
+            document.getElementById(`q${currentQuestion}-container`).classList.add('active');
+            
+            // Обновляем прогресс-бар
+            updateProgress();
+            
+            // Прокручиваем к началу вопроса
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Возврат к предыдущему вопросу
+        function prevQuestion() {
+            // Скрываем текущий вопрос
+            document.getElementById(`q${currentQuestion}-container`).classList.remove('active');
+            
+            // Показываем предыдущий вопрос
+            currentQuestion--;
+            document.getElementById(`q${currentQuestion}-container`).classList.add('active');
+            
+            // Обновляем прогресс-бар
+            updateProgress();
+            
+            // Прокручиваем к началу вопроса
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Назначаем обработчики кнопок
+        document.querySelectorAll('.next-btn').forEach(btn => {
+            btn.addEventListener('click', nextQuestion);
+        });
+        
+        document.querySelectorAll('.prev-btn').forEach(btn => {
+            btn.addEventListener('click', prevQuestion);
+        });
+        
+        // Обработка кнопки показа результата
+        document.getElementById('show-result').addEventListener('click', calculateResult);
+        
+        function calculateResult() {
+            // Проверяем, выбран ли ответ на последний вопрос
+            const selectedOption = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+            if (!selectedOption) {
+                alert("Пожалуйста, выберите ответ перед просмотром результата!");
+                return;
+            }
+            
+            // Инициализация баллов
+            const allNames = [
+                "Кровякова", "Мальчикова", "Демьяненко", "Колесова", 
+                "Калашникова", "Петров", "Мустафин", "Щёлокова", 
+                "Неборак", "Павлова", "Фатеева", "Буренкова", 
+                "Садыхов", "Хамин", "Стародумова", "Алфимов"
+            ];
+            
+            const scores = {};
+            allNames.forEach(name => scores[name] = 0);
+
+            // Подсчёт баллов
+            for (let i = 1; i <= totalQuestions; i++) {
+                const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selectedOption) {
+                    const names = selectedOption.value.split(',');
+                    names.forEach(name => scores[name]++);
+                }
+            }
+
+            // Поиск победителя
+            let maxScore = 0;
+            let winners = [];
+            
+            for (const name in scores) {
+                if (scores[name] > maxScore) {
+                    maxScore = scores[name];
+                    winners = [name];
+                } else if (scores[name] === maxScore) {
+                    winners.push(name);
+                }
+            }
+
+            // Показ результата
+            const resultElement = document.getElementById("result");
+            const winnerElement = document.getElementById("winner");
+            
+            if (winners.length === 1) {
+                winnerElement.textContent = winners[0];
+            } else {
+                winnerElement.textContent = winners.join(" или ");
+            }
+            
+            resultElement.style.display = "block";
+            createConfetti();
+            resultElement.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function createConfetti() {
+            const container = document.querySelector('.container');
+            const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-20px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                container.appendChild(confetti);
+                
+                const animationDuration = Math.random() * 3 + 2;
+                
+                confetti.style.animation = `fall ${animationDuration}s linear forwards`;
+                
+                // Создаем keyframes для падения
+                const keyframes = `
+                    @keyframes fall {
+                        to {
+                            top: 100%;
+                            left: ${Math.random() * 100}%;
+                            opacity: 1;
+                            transform: rotate(${Math.random() * 360}deg);
+                        }
+                    }
+                `;
+                
+                const styleEl = document.createElement('style');
+                styleEl.innerHTML = keyframes;
+                document.head.appendChild(styleEl);
+                
+                // Удаляем конфетти после анимации
+                setTimeout(() => {
+                    confetti.remove();
+                    styleEl.remove();
+                }, animationDuration * 1000);
+            }
+        }
+        
+        // Инициализация прогресс-бара
+        updateProgress();
+    </script>
+</body>
+</html>
